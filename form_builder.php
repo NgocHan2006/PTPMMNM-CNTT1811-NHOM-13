@@ -12,6 +12,9 @@ require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/schema_helpers.php';
 
 $vcol = versionColumn($pdo);
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // Lấy ID biểu mẫu từ URL
 $form_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?: 0;
@@ -60,7 +63,9 @@ if (!$version_id) {
 }
 
 // Xử lý thêm hoặc xóa câu hỏi
-$message = '';
+$message = isset($_GET['updated'])
+    ? 'Đã cập nhật câu hỏi.'
+    : (isset($_GET['created']) ? 'Biểu mẫu đã được tạo. Bắt đầu thêm câu hỏi bên dưới.' : '');
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -213,6 +218,8 @@ $field_type_labels = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thiết kế biểu mẫu</title>
+    <link rel="stylesheet" href="assets/app.css">
+    <script src="assets/app.js" defer></script>
 
     <style>
         * {
@@ -345,7 +352,7 @@ $field_type_labels = [
     </style>
 </head>
 
-<body>
+<body class="builder-page">
 <div class="container">
 
     <div class="header">
@@ -361,21 +368,32 @@ $field_type_labels = [
             · Trạng thái: <?= h($form['status']) ?>
         </p>
         <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-            <a class="btn btn-primary" href="conditions.php?id=<?= (int)$formId ?>">⚙ Thiết lập điều kiện</a>
-            <a class="btn btn-secondary" href="fill.php?id=<?= (int)$formId ?>" target="_blank" rel="noopener">Xem trước biểu mẫu</a>
+            <a class="btn btn-primary" href="conditions.php?id=<?= (int)$form_id ?>">⚙ Thiết lập điều kiện</a>
+            <a class="btn btn-secondary" href="fill.php?id=<?= (int)$form_id ?>&amp;preview=1" target="_blank" rel="noopener">Xem trước biểu mẫu</a>
+            <?php if ($form['status'] !== 'published'): ?>
+                <form method="post" action="publish.php" data-confirm="Công bố biểu mẫu này để người khác có thể trả lời?">
+                    <input type="hidden" name="id" value="<?= (int)$form_id ?>">
+                    <input type="hidden" name="csrf_token" value="<?= h($_SESSION['csrf_token']) ?>">
+                    <button class="primary" type="submit">Công bố biểu mẫu</button>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
 
     <?php if ($message !== ''): ?>
-        <div class="notice success"><?= h($message) ?></div>
+        <div class="notice success toast-notice" role="status"><?= h($message) ?></div>
     <?php endif; ?>
 
     <?php if ($error !== ''): ?>
         <div class="notice error"><?= h($error) ?></div>
     <?php endif; ?>
 
-    <div class="panel">
-        <h2>Thêm câu hỏi</h2>
+    <div class="builder-workspace">
+    <section class="panel builder-tools">
+        <div class="builder-panel-heading">
+            <span class="builder-panel-icon">＋</span>
+            <div><h2>Thành phần</h2><p>Thêm câu hỏi vào biểu mẫu</p></div>
+        </div>
 
         <form method="post">
             <input type="hidden" name="action" value="add_field">
@@ -424,17 +442,24 @@ $field_type_labels = [
                 <label for="is_required">Bắt buộc trả lời</label>
             </div>
 
-            <button type="submit" class="primary">+ Thêm câu hỏi</button>
+            <button type="submit" class="primary">＋ Thêm câu hỏi</button>
         </form>
-    </div>
+    </section>
 
-    <div class="panel">
-        <h2>Danh sách câu hỏi (<?= count($fields) ?>)</h2>
+    <section class="panel builder-canvas">
+        <div class="builder-panel-heading">
+            <span class="builder-panel-icon">▤</span>
+            <div><h2>Bản xem trước</h2><p><?= count($fields) ?> câu hỏi · Nhấn chỉnh sửa để đổi nội dung</p></div>
+        </div>
 
         <?php if (count($fields) === 0): ?>
-            <p class="muted">
+            <div class="empty-state">
+                <div class="empty-icon">＋</div>
+                <h3>Biểu mẫu chưa có câu hỏi</h3>
+                <p>
                 Chưa có câu hỏi nào. Hãy sử dụng biểu mẫu phía trên để thêm câu hỏi đầu tiên.
-            </p>
+                </p>
+            </div>
         <?php else: ?>
             <?php foreach ($fields as $index => $field): ?>
                 <div class="field-card">
@@ -451,6 +476,7 @@ $field_type_labels = [
                                 <?= h($field_type_labels[$field['field_type']]
                                     ?? $field['field_type']) ?>
                             </p>
+                            <span class="field-key-tag"><?= h($field['field_key']) ?></span>
 
                             <?php if (!empty($field['help_text'])): ?>
                                 <p><?= h($field['help_text']) ?></p>
@@ -472,20 +498,52 @@ $field_type_labels = [
                             <?php endif; ?>
                         </div>
 
-                        <form method="post"
-                              onsubmit="return confirm('Bạn có chắc muốn xóa câu hỏi này?');">
-                            <input type="hidden" name="action" value="delete_field">
-                            <input
-                                type="hidden"
-                                name="field_id"
-                                value="<?= (int)$field['id'] ?>"
-                            >
-                            <button type="submit" class="danger">Xóa</button>
-                        </form>
+                        <div class="field-actions">
+                            <a class="field-edit-link" href="field_edit.php?id=<?= (int)$field['id'] ?>&amp;form=<?= (int)$form_id ?>">Chỉnh sửa</a>
+                            <form method="post" data-confirm="Bạn có chắc muốn xóa câu hỏi này?">
+                                <input type="hidden" name="action" value="delete_field">
+                                <input
+                                    type="hidden"
+                                    name="field_id"
+                                    value="<?= (int)$field['id'] ?>"
+                                >
+                                <button type="submit" class="danger">Xóa</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
+    </section>
+
+    <aside class="panel builder-inspector">
+        <div class="builder-panel-heading">
+            <span class="builder-panel-icon">⚙</span>
+            <div><h2>Cài đặt biểu mẫu</h2><p>Quản lý các tùy chọn</p></div>
+        </div>
+        <div class="inspector-status">
+            <span>Trạng thái</span>
+            <b class="status <?= $form['status'] === 'published' ? 'published' : 'draft' ?>">
+                <?= $form['status'] === 'published' ? 'Đã công bố' : 'Bản nháp' ?>
+            </b>
+        </div>
+        <a class="inspector-link" href="form_edit.php?id=<?= (int)$form_id ?>">
+            <span>✎</span><span><b>Thông tin chung</b><small>Tên và mô tả biểu mẫu</small></span><i>→</i>
+        </a>
+        <a class="inspector-link" href="conditions.php?id=<?= (int)$form_id ?>">
+            <span>⌘</span><span><b>Điều kiện</b><small>Hiện, ẩn hoặc bắt buộc câu hỏi</small></span><i>→</i>
+        </a>
+        <a class="inspector-link" href="permissions.php?id=<?= (int)$form_id ?>">
+            <span>♙</span><span><b>Phân quyền</b><small>Quản lý quyền xem và xuất</small></span><i>→</i>
+        </a>
+        <a class="inspector-link" href="responses.php?form_id=<?= (int)$form_id ?>">
+            <span>☷</span><span><b>Câu trả lời</b><small>Xem dữ liệu đã thu thập</small></span><i>→</i>
+        </a>
+        <a class="inspector-link" href="version_new.php?id=<?= (int)$form_id ?>" data-confirm="Tạo phiên bản mới cho biểu mẫu này?">
+            <span>⟳</span><span><b>Tạo phiên bản</b><small>Sao chép để chỉnh sửa an toàn</small></span><i>→</i>
+        </a>
+        <div class="inspector-tip">Các thay đổi câu hỏi chỉ thực hiện được trên phiên bản nháp.</div>
+    </aside>
     </div>
 
 </div>

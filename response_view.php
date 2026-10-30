@@ -181,8 +181,9 @@ if (
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chi tiết câu trả lời</title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/app.css">
 </head>
-<body>
+<body class="response-detail-page">
     <main class="standalone">
         <a class="text-link" href="responses.php">
             ← Quay lại câu trả lời

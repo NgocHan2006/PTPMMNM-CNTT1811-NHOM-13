@@ -87,6 +87,7 @@ $typeNames = ['text' => 'Văn bản', 'number' => 'Số', 'date' => 'Ngày', 'si
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tạo biểu mẫu mới - Formly</title>
 <link rel="stylesheet" href="assets/form_builder.css">
+<link rel="stylesheet" href="assets/app.css">
 <style>
 .form-meta-panel .panel-body{padding:24px}
 .builder-form input[type="text"], .builder-form input:not([type]), .builder-form select, .builder-form textarea{width:100%}
@@ -100,7 +101,7 @@ $typeNames = ['text' => 'Văn bản', 'number' => 'Số', 'date' => 'Ngày', 'si
 @media(max-width:850px){.layout{grid-template-columns:1fr!important}.hero{padding:22px}}
 </style>
 </head>
-<body>
+<body class="create-form-page">
 <div class="page">
   <header class="topbar">
     <a class="back-link" href="forms.php">← Danh sách biểu mẫu</a>

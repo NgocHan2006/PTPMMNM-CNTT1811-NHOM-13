@@ -15,6 +15,7 @@ $formId = isset($_GET['id']) ? filter_var(
     FILTER_VALIDATE_INT,
     ['options' => ['min_range' => 1]]
 ) : false;
+$previewRequested = isset($_GET['preview']) && $_GET['preview'] === '1';
 
 if ($formId === false || $formId === null) {
     http_response_code(400);
@@ -42,8 +43,9 @@ if (!$form) {
     exit('Không tìm thấy biểu mẫu hoặc biểu mẫu chưa có phiên bản hiện tại.');
 }
 
-// Chỉ cho phép điền biểu mẫu đã công bố
-if ($form['status'] !== 'published') {
+// Bản nháp chỉ được xem trước bởi người quản lý, không thể gửi câu trả lời.
+$isPreview = $form['status'] !== 'published';
+if ($isPreview && (!$previewRequested || !canManageForm($pdo, (int)$formId))) {
     http_response_code(403);
     exit('Biểu mẫu này chưa được công bố.');
 }
@@ -79,8 +81,9 @@ $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($form['title']) ?></title>
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/app.css">
 </head>
-<body>
+<body class="fill-page">
 <main class="standalone form-standalone">
     <a class="text-link" href="forms.php">← Tất cả biểu mẫu</a>
 
@@ -93,14 +96,20 @@ $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p><?= h($form['description']) ?></p>
     </div>
 
-    <?php if (isset($_GET['sent'])): ?>
+        <?php if ($isPreview): ?>
+            <div class="success">
+                Đây là bản xem trước. Hãy công bố biểu mẫu để cho phép gửi câu trả lời.
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['sent'])): ?>
         <div class="success">
             Gửi biểu mẫu thành công! Cảm ơn bạn đã cung cấp thông tin.
         </div>
     <?php endif; ?>
 
     <form action="submit.php" method="post"
-          class="dynamic-form" id="dynamic-form">
+          class="dynamic-form" id="dynamic-form"<?= $isPreview ? ' onsubmit="return false;"' : '' ?>>
 
         <input type="hidden" name="form_id"
                value="<?= (int)$form['id'] ?>">
@@ -167,9 +176,11 @@ $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php endforeach; ?>
 
-        <button class="btn btn-primary btn-submit" type="submit">
-            Gửi câu trả lời →
-        </button>
+        <?php if (!$isPreview): ?>
+            <button class="btn btn-primary btn-submit" type="submit">
+                Gửi câu trả lời →
+            </button>
+        <?php endif; ?>
     </form>
 
     <p class="privacy-note">

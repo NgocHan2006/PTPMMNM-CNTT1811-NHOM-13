@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 $opts = json_decode($field['options_json'] ?? '[]', true);
 ?>
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sửa câu hỏi</title><link rel="stylesheet" href="assets/form_builder.css"></head><body>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sửa câu hỏi</title><link rel="stylesheet" href="assets/form_builder.css"><link rel="stylesheet" href="assets/app.css"></head><body class="field-edit-page">
 <div class="page narrow"><header class="topbar"><a class="back-link" href="form_builder.php?id=<?= $form_id ?>">← Quay lại thiết kế</a></header>
 <section class="panel edit-panel"><div class="panel-heading"><div><h1>Sửa câu hỏi</h1><p>Cập nhật nội dung và quy tắc của trường dữ liệu.</p></div></div>
 <?php if ($error): ?><div class="notice error"><?= h($error) ?></div><?php endif; ?>

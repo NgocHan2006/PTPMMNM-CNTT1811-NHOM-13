@@ -61,6 +61,7 @@ function h($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Đăng ký | Formly</title>
 <link rel="stylesheet" href="assets/auth.css">
+<link rel="stylesheet" href="assets/app.css">
 </head>
 <body>
 <main class="auth-layout register-layout">

@@ -450,7 +450,7 @@ try {
 
     $pdo->commit();
 
-    header('Location: fill.php?id=' . $formId . '&sent=1');
+    header('Location: index.php?response=sent');
     exit;
 
 } catch (Throwable $e) {
@@ -465,4 +465,3 @@ try {
         500
     );
 }
-```
