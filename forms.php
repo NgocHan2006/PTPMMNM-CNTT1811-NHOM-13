@@ -71,6 +71,7 @@ $forms = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <nav>
         <a class="nav-item" href="index.php">▦ <span>Tổng quan</span></a>
         <a class="nav-item active" href="forms.php">▤ <span>Biểu mẫu</span></a>
+        <a class="nav-item" href="templates.php">✦ <span>Mẫu biểu mẫu</span></a>
         <a class="nav-item" href="responses.php">☷ <span>Câu trả lời</span></a>
     </nav>
     <div class="sidebar-bottom">

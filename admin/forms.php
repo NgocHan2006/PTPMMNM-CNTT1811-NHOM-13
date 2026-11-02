@@ -497,6 +497,9 @@ label { display: block; font-size: 13px; font-weight: 650; margin: 16px 0 8px; }
             <div class="nav-item" onclick="showSection('forms', this)">
                 <span class="nav-icon">▤</span> Biểu mẫu của tôi
             </div>
+            <a class="nav-item" href="../templates.php">
+                <span class="nav-icon">✦</span> Mẫu biểu mẫu
+            </a>
             <a class="nav-item" href="../responses.php">
                 <span class="nav-icon">☷</span> Câu trả lời
             </a>

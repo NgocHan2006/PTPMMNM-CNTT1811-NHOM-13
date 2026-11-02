@@ -65,6 +65,7 @@ function h($value): string {
   <nav>
     <a class="nav-item active" href="index.php">▦ <span>Tổng quan</span></a>
     <a class="nav-item" href="forms.php">▤ <span>Tất cả biểu mẫu</span></a>
+    <a class="nav-item" href="templates.php">✦ <span>Mẫu biểu mẫu</span></a>
     <a class="nav-item" href="responses.php">☷ <span>Câu trả lời</span></a>
   </nav>
 
