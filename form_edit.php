@@ -6,7 +6,7 @@ function h($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'
 $formId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$formId) { http_response_code(400); exit('Thiếu mã biểu mẫu.'); }
 
-$stmt = $pdo->prepare("SELECT f.id, f.title, f.description, f.status, f.current_version_id, v.{$vcol} AS version_no FROM forms f LEFT JOIN form_versions v ON v.id=f.current_version_id WHERE f.id=?");
+$stmt = $pdo->prepare("SELECT f.id, f.title, f.description, f.status, f.current_version_id, v.{$vcol} AS version_no, v.status AS version_status FROM forms f LEFT JOIN form_versions v ON v.id=f.current_version_id WHERE f.id=?");
 $stmt->execute([$formId]);
 $form = $stmt->fetch();
 if (!$form) { http_response_code(404); exit('Không tìm thấy biểu mẫu.'); }
@@ -28,6 +28,10 @@ function make_field_key(string $label): string {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'add';
     try {
+        if (($form['version_status'] ?? 'draft') === 'published') {
+            throw new RuntimeException('Phiên bản đã công bố không thể chỉnh sửa trực tiếp. Hãy tạo phiên bản nháp mới trước khi chỉnh sửa.');
+        }
+
         if ($action === 'delete') {
             $fieldId = filter_input(INPUT_POST, 'field_id', FILTER_VALIDATE_INT);
             if (!$fieldId) throw new RuntimeException('Mã câu hỏi không hợp lệ.');
@@ -87,7 +91,7 @@ $fields = $stmt->fetchAll();
 <main class="main"><header class="topbar"><div><span class="muted">Tất cả biểu mẫu</span><span class="crumb"> / Thiết kế biểu mẫu</span></div><a class="help-link" href="README.txt">Hướng dẫn</a></header>
 <div class="page-title-row"><div><div class="eyebrow">FORM BUILDER · PHIÊN BẢN v<?= (int)$form['version_no'] ?></div><h1><?=h($form['title'])?></h1><p><?=h($form['description'])?></p></div><a class="btn btn-secondary" href="fill.php?id=<?=$formId?>">Xem biểu mẫu ↗</a></div>
 <?php if($error):?><div class="notice error"><?=h($error)?></div><?php endif;?><?php if($success):?><div class="notice success"><?=h($success)?></div><?php endif;?>
-<?php if($form['status'] !== 'draft'):?><div class="notice info">Biểu mẫu này đang ở trạng thái <?=h($form['status'])?>. Để tránh sửa trực tiếp phiên bản đã công bố, hiện tại chỉ cho phép thêm câu hỏi vào biểu mẫu bản nháp.</div><?php endif;?>
+<?php if($form['status'] !== 'draft' || ($form['version_status'] ?? 'draft') === 'published'):?><div class="notice info">Phiên bản đã công bố được giữ nguyên để bảo toàn câu trả lời cũ. Hãy tạo phiên bản mới trước khi chỉnh sửa.</div><?php endif;?>
 <div class="builder-layout"><section class="panel"><h2>＋ Thêm câu hỏi</h2><p>Chọn loại câu hỏi và nhập thông tin cần thu thập.</p><form method="post" class="builder-form" id="add-field-form"><input type="hidden" name="action" value="add"><label for="label">Nội dung câu hỏi <span class="required">*</span></label><input id="label" name="label" maxlength="255" required placeholder="Ví dụ: Bạn đánh giá dịch vụ thế nào?"><label for="field_key">Mã câu hỏi (không bắt buộc)</label><input id="field_key" name="field_key" maxlength="60" pattern="[a-z][a-z0-9_]{0,59}" placeholder="Ví dụ: service_rating"><small class="muted">Để trống để hệ thống tự tạo mã từ câu hỏi.</small><label for="field_type">Loại câu hỏi</label><select id="field_type" name="field_type"><option value="text">Văn bản ngắn</option><option value="number">Số</option><option value="date">Ngày tháng</option><option value="single_choice">Chọn một đáp án</option><option value="multiple_choice">Chọn nhiều đáp án</option></select><div id="options-area" hidden><label for="options">Các đáp án (mỗi đáp án một dòng)</label><textarea id="options" name="options" rows="5" placeholder="Rất hài lòng&#10;Bình thường&#10;Chưa hài lòng"></textarea></div><label for="help_text">Mô tả / hướng dẫn (không bắt buộc)</label><textarea id="help_text" name="help_text" rows="2" maxlength="500" placeholder="Hướng dẫn người trả lời"></textarea><label class="check-row"><input type="checkbox" name="is_required" value="1"> Bắt buộc trả lời</label><button class="btn btn-primary" type="submit">Lưu câu hỏi</button></form></section>
 <section class="panel"><h2>Câu hỏi trong biểu mẫu</h2><p><?=count($fields)?> câu hỏi · Thứ tự hiển thị từ trên xuống dưới.</p><?php if(!$fields):?><div class="empty-state">Chưa có câu hỏi nào. Hãy thêm câu hỏi đầu tiên ở bên trái.</div><?php else: foreach($fields as $i=>$field):?><div class="field-card"><div class="field-card-top"><div><h3><?=($i+1)?>. <?=h($field['label'])?><?=$field['is_required']?' <span class="required">*</span>':''?></h3><div class="field-meta">Mã: <?=h($field['field_key'])?> · Loại: <?=h($field['field_type'])?></div><?php if($field['help_text']):?><div class="field-meta" style="margin-top:5px"><?=h($field['help_text'])?></div><?php endif;?><?php $opts=json_decode($field['options_json']??'[]',true)?:[];if($opts):?><div class="option-list">Đáp án: <?=h(implode(' · ',$opts))?></div><?php endif;?></div><form method="post" onsubmit="return confirm('Bạn có chắc muốn xóa câu hỏi này?')"><input type="hidden" name="action" value="delete"><input type="hidden" name="field_id" value="<?=(int)$field['id']?>"><button class="delete-button" type="submit">Xóa</button></form></div></div><?php endforeach; endif;?></section></div><?php require __DIR__ . '/includes/site_footer.php'; ?></main>
 <script>

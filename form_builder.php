@@ -40,7 +40,8 @@ requireFormManager($pdo, $form_id);
 
 // Lấy thông tin biểu mẫu và phiên bản hiện tại
 $stmt = $pdo->prepare(
-    "SELECT f.*, v.id AS version_id, v.{$vcol} AS version_no
+    "SELECT f.*, v.id AS version_id, v.{$vcol} AS version_no,
+            v.status AS version_status
      FROM forms f
      LEFT JOIN form_versions v ON v.id = f.current_version_id
      WHERE f.id = ?"
@@ -72,6 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     try {
+        if (($form['version_status'] ?? 'draft') === 'published') {
+            throw new RuntimeException(
+                'Phiên bản đã công bố không thể chỉnh sửa trực tiếp. '
+                . 'Hãy tạo phiên bản mới trước.'
+            );
+        }
+
         if ($action === 'add_field') {
             $label = trim($_POST['label'] ?? '');
             $field_type = $_POST['field_type'] ?? 'text';
@@ -367,6 +375,12 @@ $field_type_labels = [
             Phiên bản: <?= h($form['version_no']) ?>
             · Trạng thái: <?= h($form['status']) ?>
         </p>
+        <?php if (($form['version_status'] ?? 'draft') === 'published'): ?>
+            <div class="notice info">
+                Phiên bản này đã được công bố và được giữ nguyên để bảo toàn câu trả lời cũ.
+                Hãy tạo phiên bản mới để chỉnh sửa.
+            </div>
+        <?php endif; ?>
         <div class="actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
             <a class="btn btn-primary" href="conditions.php?id=<?= (int)$form_id ?>">⚙ Thiết lập điều kiện</a>
             <a class="btn btn-secondary" href="fill.php?id=<?= (int)$form_id ?>&amp;preview=1" target="_blank" rel="noopener">Xem trước biểu mẫu</a>
@@ -395,6 +409,7 @@ $field_type_labels = [
             <div><h2>Thành phần</h2><p>Thêm câu hỏi vào biểu mẫu</p></div>
         </div>
 
+        <?php if (($form['version_status'] ?? 'draft') !== 'published'): ?>
         <form method="post">
             <input type="hidden" name="action" value="add_field">
 
@@ -444,6 +459,9 @@ $field_type_labels = [
 
             <button type="submit" class="primary">＋ Thêm câu hỏi</button>
         </form>
+        <?php else: ?>
+            <p class="muted">Tạo phiên bản mới để thêm hoặc chỉnh sửa câu hỏi.</p>
+        <?php endif; ?>
     </section>
 
     <section class="panel builder-canvas">
@@ -499,6 +517,7 @@ $field_type_labels = [
                         </div>
 
                         <div class="field-actions">
+                            <?php if (($form['version_status'] ?? 'draft') !== 'published'): ?>
                             <a class="field-edit-link" href="field_edit.php?id=<?= (int)$field['id'] ?>&amp;form=<?= (int)$form_id ?>">Chỉnh sửa</a>
                             <form method="post" data-confirm="Bạn có chắc muốn xóa câu hỏi này?">
                                 <input type="hidden" name="action" value="delete_field">
@@ -509,6 +528,7 @@ $field_type_labels = [
                                 >
                                 <button type="submit" class="danger">Xóa</button>
                             </form>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

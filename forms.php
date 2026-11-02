@@ -95,6 +95,7 @@ $forms = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 <?php if (isset($_GET['deleted'])): ?><div class="alert alert-success toast-notice" role="status">Biểu mẫu đã được xóa thành công.</div><?php endif; ?>
 <?php if (isset($_GET['published'])): ?><div class="alert alert-success toast-notice" role="status">Biểu mẫu đã được công bố. Bạn có thể mở để trả lời câu hỏi.</div><?php endif; ?>
+<?php if (isset($_GET['unpublished'])): ?><div class="alert alert-success toast-notice" role="status">Biểu mẫu đã được hủy công bố. Các câu trả lời hiện có vẫn được giữ lại.</div><?php endif; ?>
 <?php if ($deleteError !== ''): ?><div class="alert alert-error"><?= h($deleteError) ?></div><?php endif; ?>
 
 <form class="filter-bar" onsubmit="return false">
@@ -139,6 +140,13 @@ $forms = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 <a href="responses.php?form_id=<?= (int)$f['id'] ?>">Xem câu trả lời</a>
                 <a href="permissions.php?id=<?= (int)$f['id'] ?>">Phân quyền</a>
                 <a href="version_new.php?id=<?= (int)$f['id'] ?>" data-confirm="Tạo phiên bản mới cho biểu mẫu này?">Tạo phiên bản mới</a>
+                <?php if ($status === 'published'): ?>
+                    <form method="post" action="unpublish.php" data-confirm="Hủy công bố biểu mẫu này? Người trả lời sẽ không thể gửi câu trả lời mới, các câu trả lời hiện có vẫn được giữ lại.">
+                        <input type="hidden" name="id" value="<?= (int)$f['id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= h($_SESSION['csrf_token']) ?>">
+                        <button type="submit">Hủy công bố</button>
+                    </form>
+                <?php endif; ?>
                 <form method="post" action="forms.php" data-confirm="Xóa biểu mẫu này cùng toàn bộ phản hồi và dữ liệu liên quan?">
                     <input type="hidden" name="form_id" value="<?= (int)$f['id'] ?>">
                     <input type="hidden" name="csrf_token" value="<?= h($_SESSION['csrf_token']) ?>">
