@@ -75,10 +75,10 @@ function h($value): string {
       <b><?= h($_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Tài khoản') ?></b>
       <small><?= h($_SESSION['role'] ?? 'Thành viên') ?></small>
     </div>
-    <a href="logout.php"
+    <a class="logout-link" href="logout.php"
        onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')"
-       style="margin-left:auto; color:#dc2626; text-decoration:none; font-size:13px;">
-      Đăng xuất
+       aria-label="Đăng xuất tài khoản">
+      <span aria-hidden="true">↪</span><span>Đăng xuất</span>
     </a>
   </div>
 </aside>

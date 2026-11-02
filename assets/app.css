@@ -21,6 +21,73 @@ body {
     font-family: Inter, "Segoe UI", Arial, sans-serif;
 }
 
+.sidebar-bottom {
+    gap: 10px;
+    margin: auto 0 0;
+    padding: 12px;
+    border: 1px solid #202d68;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #17224f, #293779);
+    box-shadow: 0 10px 24px rgba(16, 27, 80, .2);
+}
+
+.sidebar-bottom .avatar {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 13px;
+    background: linear-gradient(145deg, #ff8a3d, #9b75ff);
+    color: #fff;
+    font-size: 15px;
+}
+
+.sidebar-bottom > div:not(.avatar) {
+    min-width: 0;
+    flex: 1;
+}
+
+.sidebar-bottom b {
+    display: block;
+    overflow: hidden;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar-bottom small {
+    display: block;
+    margin-top: 3px;
+    color: #c5ccef;
+    font-size: 10px;
+}
+
+.sidebar-bottom .logout-link {
+    display: inline-flex;
+    min-height: 34px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 9px;
+    border: 1px solid rgba(255, 255, 255, .24);
+    border-radius: 9px;
+    background: #ff6b35;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sidebar-bottom .logout-link:hover {
+    border-color: #ffb18e;
+    background: #e85b25;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
 a, button, input, select, textarea, summary {
     transition: color .18s ease, background-color .18s ease, border-color .18s ease,
         box-shadow .18s ease, transform .18s ease;
@@ -195,15 +262,50 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 }
 
 .card-actions a {
-    padding: 8px 10px;
-    border: 1px solid #ffe0cc;
+    display: inline-flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid transparent;
     border-radius: 8px;
-    background: #fff7f1;
-    color: var(--app-primary-dark);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.card-actions a:nth-child(1) {
+    border-color: #5b21b6;
+    background: #6d28d9;
+}
+
+.card-actions a:nth-child(2) {
+    border-color: #1d4ed8;
+    background: #2563eb;
+}
+
+.card-actions a:nth-child(3) {
+    border-color: #047857;
+    background: #059669;
+}
+
+.card-actions a:nth-child(1):hover {
+    background: #5b21b6;
+}
+
+.card-actions a:nth-child(2):hover {
+    background: #1d4ed8;
+}
+
+.card-actions a:nth-child(3):hover {
+    background: #047857;
 }
 
 .card-actions a:hover {
-    background: #fff0e6;
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 .status {
@@ -871,8 +973,47 @@ footer {
     font-weight: 700;
 }
 
+.response-detail-link {
+    display: inline-flex;
+    min-height: 36px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid #1d4ed8;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.responses-page .status {
+    display: inline-flex;
+    min-height: 28px;
+    align-items: center;
+    padding: 5px 11px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.responses-page .status.published {
+    background: #059669;
+    color: #fff;
+}
+
+.responses-page .status.cancelled {
+    background: #dc2626;
+    color: #fff;
+}
+
 .row-primary-action:hover, .response-detail-link:hover {
     color: #4338ca;
+}
+
+.response-detail-link:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 .action-menu {

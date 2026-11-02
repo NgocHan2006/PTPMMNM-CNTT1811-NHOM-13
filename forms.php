@@ -77,7 +77,7 @@ $forms = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <div class="sidebar-bottom">
         <div class="avatar"><?= h(strtoupper(substr($_SESSION['username'] ?? 'F',0,1))) ?></div>
         <div><b><?= h($_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Tài khoản') ?></b><small><?= h($_SESSION['role'] ?? 'Thành viên') ?></small></div>
-        <a href="logout.php" style="margin-left:auto;color:#ef4444;font-size:12px">Thoát</a>
+        <a class="logout-link" href="logout.php" aria-label="Đăng xuất tài khoản"><span aria-hidden="true">↪</span><span>Đăng xuất</span></a>
     </div>
 </aside>
 
