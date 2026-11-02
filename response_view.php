@@ -221,6 +221,7 @@ if (
                 <?php endforeach; ?>
             <?php endif; ?>
         </section>
+        <?php require __DIR__ . '/includes/site_footer.php'; ?>
     </main>
 </body>
 </html>

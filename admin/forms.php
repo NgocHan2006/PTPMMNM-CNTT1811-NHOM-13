@@ -449,6 +449,29 @@ label { display: block; font-size: 13px; font-weight: 650; margin: 16px 0 8px; }
     .modal-actions { flex-wrap: wrap; }
     .modal-actions button { flex: 1; }
 }
+.site-footer { margin-top: 40px; padding: 0; color: #d7dcf5; background: #0c1749; }
+.site-footer .footer-intro { padding: 18px 36px; border-bottom: 1px solid #ffffff12; color: #bfc8ef; font-size: 13px; line-height: 1.65; }
+.site-footer .footer-main { display: flex; min-height: 105px; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 36px; background: #101b50; }
+.site-footer .footer-brand { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 12px; color: white; text-decoration: none; }
+.site-footer .footer-brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; background: var(--primary); color: white; font-size: 22px; font-weight: 800; }
+.site-footer .footer-brand strong, .site-footer .footer-brand small { display: block; }
+.site-footer .footer-brand strong { font-size: 17px; }
+.site-footer .footer-brand small, .site-footer .footer-note { color: #bfc8ef; font-size: 12px; }
+.site-footer .footer-brand small { margin-top: 3px; }
+.site-footer .footer-note { display: grid; gap: 5px; line-height: 1.6; }
+.site-footer .footer-note span { color: #8794c4; }
+.site-footer .footer-contact { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid #ffffff35; border-radius: 8px; color: white; font-size: 12px; font-weight: 650; text-decoration: none; }
+.site-footer .footer-contact:hover { border-color: #ffffff75; background: #ffffff12; }
+.site-footer .footer-bottom { display: flex; min-height: 62px; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 36px; color: #aab6e3; font-size: 12px; }
+.site-footer .footer-bottom nav { display: flex; flex-wrap: wrap; }
+.site-footer .footer-bottom nav a { padding: 0 12px; border-right: 1px solid #ffffff40; color: inherit; text-decoration: none; }
+.site-footer .footer-bottom nav a:first-child { padding-left: 0; }
+.site-footer .footer-bottom nav a:last-child { padding-right: 0; border-right: 0; }
+.site-footer .footer-bottom nav a:hover { color: white; }
+@media(max-width: 760px) {
+    .site-footer .footer-intro, .site-footer .footer-main, .site-footer .footer-bottom { padding-right: 18px; padding-left: 18px; }
+    .site-footer .footer-main, .site-footer .footer-bottom { align-items: flex-start; flex-direction: column; gap: 14px; }
+}
 </style>
 </head>
 <body>
@@ -593,6 +616,7 @@ label { display: block; font-size: 13px; font-weight: 650; margin: 16px 0 8px; }
                 <div class="form-list" id="formList"></div>
             </div>
         </div>
+        <?php $siteFooterBase = '../'; require __DIR__ . '/../includes/site_footer.php'; ?>
     </main>
 </div>
 

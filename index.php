@@ -205,34 +205,7 @@ function h($value): string {
   <?php endif; ?>
   </section>
 
-  <footer class="dashboard-footer">
-    <div class="footer-intro">
-      Formly giúp bạn tạo biểu mẫu, thu thập câu trả lời và theo dõi dữ liệu
-      thuận tiện trong cùng một không gian làm việc.
-    </div>
-    <div class="footer-main">
-      <a class="footer-brand" href="index.php" aria-label="Formly - Trang tổng quan">
-        <span class="footer-brand-mark">F</span>
-        <span>
-          <strong>Formly</strong>
-          <small>Công cụ tạo biểu mẫu</small>
-        </span>
-      </a>
-      <div class="footer-note">
-        Dữ liệu biểu mẫu của bạn được quản lý trong hệ thống.
-        <span>© <?= date('Y') ?> Formly</span>
-      </div>
-      <a class="footer-contact" href="forms.php">Quản lý biểu mẫu <span>→</span></a>
-    </div>
-    <div class="footer-bottom">
-      <span>Đơn giản hóa việc thu thập thông tin</span>
-      <nav aria-label="Liên kết nhanh">
-        <a href="index.php">Tổng quan</a>
-        <a href="forms.php">Biểu mẫu</a>
-        <a href="responses.php">Câu trả lời</a>
-      </nav>
-    </div>
-  </footer>
+  <?php require __DIR__ . '/includes/site_footer.php'; ?>
 </main>
 
 </body>

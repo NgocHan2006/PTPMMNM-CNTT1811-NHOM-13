@@ -172,7 +172,7 @@ $typeNames = ['text' => 'Văn bản', 'number' => 'Số', 'date' => 'Ngày', 'si
     </aside>
   </form>
 
-  <footer class="footer">Formly · Công cụ tạo biểu mẫu có điều kiện</footer>
+  <?php require __DIR__ . '/includes/site_footer.php'; ?>
 </div>
 <script>
 function toggleOptions() {

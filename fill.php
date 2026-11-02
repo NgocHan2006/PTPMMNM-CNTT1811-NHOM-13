@@ -186,6 +186,7 @@ $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <p class="privacy-note">
         Không chia sẻ thông tin nhạy cảm trong biểu mẫu thử nghiệm.
     </p>
+    <?php require __DIR__ . '/includes/site_footer.php'; ?>
 </main>
 
 <script>

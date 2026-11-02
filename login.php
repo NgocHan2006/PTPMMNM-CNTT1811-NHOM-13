@@ -99,6 +99,7 @@ function h($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'
         <footer class="form-footer"><span>© <?= date('Y') ?> Formly</span><a href="index.php">Về trang chủ</a></footer>
     </section>
 </main>
+<?php require __DIR__ . '/includes/site_footer.php'; ?>
 <script>
 document.querySelectorAll('[data-toggle]').forEach(function(button) {
     button.addEventListener('click', function() {

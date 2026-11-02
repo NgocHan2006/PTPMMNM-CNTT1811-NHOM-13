@@ -150,7 +150,7 @@ $forms = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 <?php endforeach; endif; ?>
 <tr id="noMatch" hidden><td colspan="6" style="text-align:center;padding:28px;color:#64748b">Không tìm thấy biểu mẫu phù hợp.</td></tr>
 </tbody></table></div>
-<footer>Formly · Quản lý biểu mẫu và dữ liệu thu thập</footer>
+<?php require __DIR__ . '/includes/site_footer.php'; ?>
 </main>
 <script>
 (() => {

@@ -547,6 +547,7 @@ $field_type_labels = [
     </div>
 
 </div>
+<?php require __DIR__ . '/includes/site_footer.php'; ?>
 
 <script>
     const typeSelect = document.getElementById('field_type');
