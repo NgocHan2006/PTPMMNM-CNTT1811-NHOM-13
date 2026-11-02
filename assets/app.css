@@ -1,12 +1,13 @@
 :root {
-    --app-primary: #6366f1;
-    --app-primary-dark: #4f46e5;
+    --app-primary: #ff6500;
+    --app-primary-dark: #e85b00;
     --app-violet: #8b5cf6;
-    --app-ink: #1e293b;
-    --app-muted: #64748b;
-    --app-line: #e2e8f0;
+    --app-navy: #101b50;
+    --app-ink: #17224f;
+    --app-muted: #70799a;
+    --app-line: #dfe2f3;
     --app-surface: #fff;
-    --app-page: #f8fafc;
+    --app-page: #fbfbfe;
     --app-shadow: 0 8px 26px rgba(15, 23, 42, .055);
 }
 
@@ -27,14 +28,14 @@ a, button, input, select, textarea, summary {
 
 a:focus-visible, button:focus-visible, input:focus-visible,
 select:focus-visible, textarea:focus-visible, summary:focus-visible {
-    outline: 3px solid rgba(99, 102, 241, .25);
+    outline: 3px solid rgba(255, 101, 0, .25);
     outline-offset: 2px;
 }
 
 .sidebar {
     width: 252px;
     padding: 26px 16px;
-    background: rgba(255, 255, 255, .97);
+    background: #f4f4ff;
     border-color: var(--app-line);
     box-shadow: 4px 0 24px rgba(15, 23, 42, .025);
 }
@@ -50,13 +51,13 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
     height: 38px;
     border-radius: 12px;
     background: linear-gradient(135deg, var(--app-primary), var(--app-violet));
-    box-shadow: 0 6px 14px rgba(99, 102, 241, .2);
+    box-shadow: 0 6px 14px rgba(255, 101, 0, .2);
 }
 
 .workspace {
     border-color: #edf0f5;
     border-radius: 10px;
-    background: #f8fafc;
+    background: #ededfb;
     color: var(--app-muted);
 }
 
@@ -66,13 +67,13 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 }
 
 .nav-item.active {
-    background: #eef2ff;
-    color: var(--app-primary-dark);
+    background: #cdd2ee;
+    color: var(--app-navy);
     box-shadow: inset 3px 0 var(--app-primary);
 }
 
 .nav-item:hover {
-    background: #f1f5f9;
+    background: #e7e8f8;
     color: var(--app-primary-dark);
     transform: translateX(2px);
 }
@@ -82,25 +83,38 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 }
 
 .topbar {
-    color: var(--app-muted);
+    margin: 0 -42px;
+    padding: 0 42px;
+    color: #d7dcf5;
+    background: var(--app-navy);
+    border-color: #26336d;
+}
+
+.topbar .muted {
+    color: #bfc8ef;
+}
+
+.topbar .crumb {
+    color: #fff;
 }
 
 .help-link {
     padding: 8px 12px;
-    border: 1px solid var(--app-line);
+    border: 1px solid #ffffff3b;
     border-radius: 9px;
-    background: #fff;
-    color: #475569;
+    background: transparent;
+    color: #fff;
     font-weight: 600;
 }
 
 .help-link:hover {
-    border-color: #c7d2fe;
-    color: var(--app-primary-dark);
+    border-color: #ffffff80;
+    background: #ffffff1a;
+    color: #fff;
 }
 
 .welcome h1, .page-title-row h1 {
-    color: #0f172a;
+    color: var(--app-navy);
     font-size: 30px;
     line-height: 1.2;
     letter-spacing: -1.1px;
@@ -123,13 +137,13 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--app-primary), var(--app-violet));
-    box-shadow: 0 7px 16px rgba(99, 102, 241, .17);
+    background: var(--app-primary);
+    box-shadow: 0 7px 16px rgba(255, 101, 0, .17);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--app-primary-dark), #7c3aed);
-    box-shadow: 0 10px 20px rgba(99, 102, 241, .22);
+    background: var(--app-primary-dark);
+    box-shadow: 0 10px 20px rgba(255, 101, 0, .22);
     transform: translateY(-1px);
 }
 
@@ -162,7 +176,7 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 }
 
 .stat-value {
-    color: #0f172a;
+    color: var(--app-navy);
 }
 
 .form-card {
@@ -172,24 +186,24 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 
 .form-card:hover {
     transform: translateY(-3px);
-    border-color: #c7d2fe;
+    border-color: #ffc499;
     box-shadow: 0 14px 34px rgba(15, 23, 42, .09);
 }
 
 .form-card h3 {
-    color: #0f172a;
+    color: var(--app-navy);
 }
 
 .card-actions a {
     padding: 8px 10px;
-    border: 1px solid #e0e7ff;
+    border: 1px solid #ffe0cc;
     border-radius: 8px;
-    background: #f5f7ff;
+    background: #fff7f1;
     color: var(--app-primary-dark);
 }
 
 .card-actions a:hover {
-    background: #eef2ff;
+    background: #fff0e6;
 }
 
 .status {
@@ -265,8 +279,8 @@ input, select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-    border-color: #818cf8;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, .1);
+    border-color: var(--app-primary);
+    box-shadow: 0 0 0 3px rgba(255, 101, 0, .1);
 }
 
 footer {
@@ -431,7 +445,7 @@ footer {
     width: 100%;
     min-height: 3px;
     border-radius: 7px 7px 3px 3px;
-    background: linear-gradient(180deg, #8b5cf6, #6366f1);
+    background: linear-gradient(180deg, #ff9a54, #ff6500);
     transition: height .35s ease;
 }
 
@@ -446,7 +460,7 @@ footer {
 
 .dashboard-empty h3 {
     margin: 0 0 6px;
-    color: #0f172a;
+    color: var(--app-navy);
 }
 
 .dashboard-empty p {
@@ -456,6 +470,13 @@ footer {
 
 .forms-page .table-wrap table {
     min-width: 900px;
+}
+
+@media (max-width: 760px) {
+    .topbar {
+        margin: 0 -16px;
+        padding: 0 16px;
+    }
 }
 
 .forms-page .actions {
